@@ -3,28 +3,46 @@ package com.mygdx.game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 
 public class GameScreen implements Screen {
 
     private final JogoVelha parent;
-    private String victoryMessage;
+    private GameState gameState;
+    private SpriteBatch batch;
+    private Texture xTexture;
+    private Texture oTexture;
+    private Board board;
+    private char currentPlayer;
+
+    @Override
+    public void create() {
+        batch = new SpriteBatch();
+        xTexture = new Texture("x.jpg");
+        oTexture = new Texture("o.jpg");
+        board = new Board();
+        currentPlayer = 'X';
+    }
 
     public GameScreen(JogoVelha parent) {
-    
         this.parent = parent;
     }
 
     @Override
     public void show() {
-        // Lógica de inicialização, se necessário
+
     }
 
     @Override
-    public void renderGameScreen() {
+    public void render(float delta) {
         handleInput();
         update();
         draw();
     }
+
 
     private void handleInput() { 
         if (Gdx.input.justTouched()) {
@@ -67,7 +85,7 @@ public class GameScreen implements Screen {
     
         batch.setColor(0, 0, 0, 1);
     
-        // Centralizando o tabuleiro
+        // centralizando o tabuleiro
         float offsetX = (Gdx.graphics.getWidth() - 3 * cellWidth) / 2.0f;
         float offsetY = (Gdx.graphics.getHeight() - 3 * cellHeight) / 2.0f;
     
@@ -116,27 +134,39 @@ public class GameScreen implements Screen {
     }
 
     @Override
+    public void returnWinner(char winner) {
+        this.winner = winner;
+    }
+
+    private void update() {
+
+    }
+
+
+    @Override
     public void resize(int width, int height) {
-        // Lógica de redimensionamento, se necessário
+
     }
 
     @Override
     public void pause() {
-        // Lógica de pausa, se necessário
+
     }
 
     @Override
     public void resume() {
-        // Lógica de resumo, se necessário
+
     }
 
     @Override
     public void hide() {
-        // Lógica de ocultar a tela, se necessário
+
     }
 
     @Override
     public void dispose() {
-        // Lógica de disposição (liberação de recursos), se necessário
+        xTexture.dispose();
+        oTexture.dispose();
+        batch.dispose();
     }
 }

@@ -8,12 +8,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameOverScreen implements Screen {
     private JogoVelha parent;
-    private String victoryMessage;
     private BitmapFont font;
     private SpriteBatch batch;
+    private char winner;
 
-    public GameOverScreen(String victoryMessage) {
-        this.victoryMessage = victoryMessage;
+    public GameOverScreen(JogoVelha parent, char winner) {
+        this.parent = parent;
+        this.winner = winner;
         batch = new SpriteBatch();
         font = new BitmapFont();
     }
@@ -24,19 +25,38 @@ public class GameOverScreen implements Screen {
     }
 
     @Override
-    public void renderGameOverScreen(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+    public void render(float delta) {
+        clearScreen();
+
+        drawVictoryMessage();
+        drawOptions();
+
+        handleInput();
+    }
+
+    private void clearScreen() {
+        Gdx.gl.glClearColor(1, 1, 1, 1); // Cor branca
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    }
 
-        // Lógica de renderização da tela de Game Over
+    private void drawVictoryMessage() {
+        batch.begin();
+        font.draw(batch, "Jogador " + winner + " venceu!", 100, 300);
+        batch.end();
+    }
 
-        // Exemplo: Desenhe um texto indicando o Game Over
-        parent.getBatch().begin();
-        parent.getFont().draw(parent.getBatch(), victoryMessage, 0, );
-        parent.getBatch().end();
-        // Verifique se o jogador tocou na tela para retornar ao menu principal
+    private void drawOptions() {
+        batch.begin();
+        font.draw(batch, "Toque para reiniciar", 100, 200);
+        font.draw(batch, "Segure para fechar", 100, 150);
+        batch.end();
+    }
+
+    private void handleInput() {
         if (Gdx.input.justTouched()) {
-            parent.setScreen(new MainMenuScreen(parent));
+            parent.setScreen(new GameScreen(parent)); // Reiniciar
+        } else if (Gdx.input.isTouched()) {
+            Gdx.app.exit(); // Fechar
         }
     }
 
@@ -65,5 +85,7 @@ public class GameOverScreen implements Screen {
     @Override
     public void dispose() {
         // Lógica de limpeza, se necessário
+        batch.dispose();
+        font.dispose();
     }
 }

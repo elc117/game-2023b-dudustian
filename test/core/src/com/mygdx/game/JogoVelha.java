@@ -6,68 +6,55 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.mygdx.game.GameState;
-import com.mygdx.game.Screen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 
+import com.mygdx.game.GameState;
 import com.mygdx.game.GameScreen;
 import com.mygdx.game.GameOverScreen;
-import com.mygdx.game.MainMenuScreen;
 
 public class JogoVelha extends Game {
     private GameState gameState;
-    private SpriteBatch batch;
-    private Texture xTexture;
-    private Texture oTexture;
-    private Board board;
-    private char currentPlayer;
-    private MainMenuScreen mainMenuScreen;
-
+    private GameScreen gameScreen;
+    private GameOverScreen gameOverScreen;
+    private char winner;
 
     @Override
     public void create() {
-        batch = new SpriteBatch();
-        mainMenuScreen = new MainMenuScreen(this);
-        setScreen(mainMenuScreen);
-        xTexture = new Texture("x.jpg");
-        oTexture = new Texture("o.jpg");
-        board = new Board();
-        currentPlayer = 'X';
-        gameState = GameState.MAIN_MENU;
+        gameState = GameState.PLAYING;
+        setScreen(new GameScreen(this));
+    }
+
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    public void setGameState(GameState newState) {
+        gameState = newState;
     }
 
     @Override
     public void render() {
-        // Lógica de renderização do jogo
+        super.render();
+
         switch (gameState) {
             case PLAYING:
-                renderGameScreen();
+                if (!(getScreen() instanceof GameScreen)) {
+                    setScreen(new GameScreen(this));
+                }
                 break;
             case GAME_OVER:
-               renderGameOverScreen();
+                if (!(getScreen() instanceof GameOverScreen)) {
+                    setScreen(new GameOverScreen(this, winner));
+                }
                 break;
+            // Adicione outros casos conforme necessário
         }
     }
 
-
-    private void update() {
-        
-    }
-
-
-    public void setScreen(Screen screen) {
-        Gdx.input.setInputProcessor(screen.getInputProcessor());
-        ((Screen) getScreen()).dispose();
-        screen.show();
-        super.setScreen(screen);
-    }
-
-
     @Override
     public void dispose() {
-        xTexture.dispose();
-        oTexture.dispose();
-        batch.dispose();
+        // Lógica de limpeza, se necessário
     }
 }
