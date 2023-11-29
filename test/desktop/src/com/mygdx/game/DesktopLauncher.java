@@ -10,6 +10,6 @@ public class DesktopLauncher {
 		config.setTitle("game1");
 		config.setWindowedMode(1280, 720);
 		config.setWindowSizeLimits(1280, 720, -1, -1);
-		new Lwjgl3Application(new game(), config);
+		new Lwjgl3Application(new JogoVelha(), config);
 	}
 }

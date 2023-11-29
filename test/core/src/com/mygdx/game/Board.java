@@ -2,7 +2,7 @@ package com.mygdx.game;
 
 public class Board {
     private char[][] cells;
-
+    
     public Board() {
         cells = new char[3][3];
         for (int i = 0; i < 3; i++) {
@@ -11,6 +11,7 @@ public class Board {
             }
         }
     }
+    
 
     public char getCell(int row, int col) {
         return cells[row][col];
