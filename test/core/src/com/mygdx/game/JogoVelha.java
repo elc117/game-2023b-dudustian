@@ -11,9 +11,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.graphics.Color;
 
 import com.mygdx.game.PerguntaDinossauro;
-
 
 public class JogoVelha extends ApplicationAdapter {
     private SpriteBatch batch;
@@ -31,6 +31,8 @@ public class JogoVelha extends ApplicationAdapter {
     private Texture buttonCTexture;
     private Texture buttonDTexture;
     private boolean perguntaEmAndamento;
+    private Texture backgroundTexture;
+    private Texture lineTexture;
 
     private float buttonSpacing = 20;
 
@@ -47,19 +49,21 @@ public class JogoVelha extends ApplicationAdapter {
         criarPerguntas();
         Collections.shuffle(perguntas);
         proximaPergunta();
-        buttonATexture = new Texture("button_A.png");
-        buttonBTexture = new Texture("button_B.png");
-        buttonCTexture = new Texture("button_C.png");
-        buttonDTexture = new Texture("button_D.png");
+        buttonATexture = new Texture("button_A2.png");
+        buttonBTexture = new Texture("button_B2.png");
+        buttonCTexture = new Texture("button_C2.png");
+        buttonDTexture = new Texture("button_D2.png");
         perguntaEmAndamento = true;
+        backgroundTexture = new Texture("background.png");
+        lineTexture = new Texture("osso.png"); 
     }
 
     @Override
     public void render() {
-        handleInput();
-        update();
-        draw();
-    }
+            handleInput();
+            update();
+            draw();
+        }
 
     private void handleInput() {
         if (Gdx.input.justTouched()) {
@@ -67,7 +71,6 @@ public class JogoVelha extends ApplicationAdapter {
                 // ignora as jogadas se o jogo já terminou ou se uma pergunta está em andamento
                 return;
             }
-    
             int row = Gdx.input.getY() / (Gdx.graphics.getHeight() / 3);
             int col = Gdx.input.getX() / (Gdx.graphics.getWidth() / 3);
     
@@ -95,7 +98,8 @@ public class JogoVelha extends ApplicationAdapter {
     private void draw() {
         ScreenUtils.clear(1, 1, 1, 1);
         batch.begin();
-    
+        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
         if (perguntaEmAndamento == true) {
             drawPergunta();
             drawRespostas();
@@ -114,11 +118,11 @@ public class JogoVelha extends ApplicationAdapter {
             font.getData().setScale(1);
             font.setColor(1, 1, 1, 1);
     
-            Texture restartButtonTexture = new Texture("restart_button.png");
-            Texture exitButtonTexture = new Texture("exit_button.png");
+            Texture restartButtonTexture = new Texture("restart_button1.png");
+            Texture exitButtonTexture = new Texture("exit_button1.png");
     
-            float buttonWidth = 250;
-            float buttonHeight = 70;
+            float buttonWidth = 200;
+            float buttonHeight = 150;
             float buttonSpacing = 50;
     
             float restartButtonX = Gdx.graphics.getWidth() / 2.0f - buttonWidth - buttonSpacing / 2.0f;
@@ -149,18 +153,16 @@ public class JogoVelha extends ApplicationAdapter {
         batch.end();
     }
 
-
     private void drawBoard() {
         float cellWidth = Gdx.graphics.getWidth() / 4.0f;
         float cellHeight = Gdx.graphics.getHeight() / 4.0f;
-
-        batch.setColor(0, 0, 0, 1);
-
-        // centraliza o tabuleiro
+    
         float offsetX = (Gdx.graphics.getWidth() - 3 * cellWidth) / 2.0f;
         float offsetY = (Gdx.graphics.getHeight() - 3 * cellHeight) / 2.0f;
-
-        // linhas verticais
+    
+        batch.setColor(0, 0, 0, 1);  // Define a cor preta para desenhar as linhas
+    
+        // Desenha linhas verticais
         for (int i = 1; i < 3; i++) {
             batch.draw(xTexture, offsetX + i * cellWidth - 1.0f, offsetY, 2.0f, 3 * cellHeight);
         }
@@ -169,9 +171,9 @@ public class JogoVelha extends ApplicationAdapter {
         for (int i = 1; i < 3; i++) {
             batch.draw(xTexture, offsetX, offsetY + i * cellHeight - 1.0f, 3 * cellWidth, 2.0f);
         }
-
         batch.setColor(1, 1, 1, 1);
     }
+
 
     private void drawPieces() {
         float cellWidth = Gdx.graphics.getWidth() / 4.0f;
@@ -186,9 +188,9 @@ public class JogoVelha extends ApplicationAdapter {
                 float y = offsetY + (2 - i) * cellHeight;
 
                 if (board.getCell(i, j) == 'X') {
-                    batch.draw(xTexture, x + 5, y + 5, cellWidth - 10, cellHeight - 10);
+                    batch.draw(xTexture, x + 5, y + 5, cellWidth - 40, cellHeight - 10);
                 } else if (board.getCell(i, j) == 'O') {
-                    batch.draw(oTexture, x + 5, y + 5, cellWidth - 10, cellHeight - 10);
+                    batch.draw(oTexture, x + 5, y + 5, cellWidth - 40, cellHeight - 10);
                 }
             }
         }
@@ -230,16 +232,16 @@ public class JogoVelha extends ApplicationAdapter {
     }
 
     private void drawRespostas() {
-        float buttonWidth = 150; 
-        float buttonHeight = 100; 
-        float buttonSpacing = 40;  
-    
+        float buttonWidth = 180; 
+        float buttonHeight = 180; 
+        float buttonSpacing = 25;  
+
         float buttonAX = Gdx.graphics.getWidth() / 2.0f - buttonWidth - buttonSpacing / 2.0f;
         float buttonBX = Gdx.graphics.getWidth() / 2.0f + buttonSpacing / 2.0f;
         float buttonCX = Gdx.graphics.getWidth() / 2.0f - buttonWidth - buttonSpacing / 2.0f;
         float buttonDX = Gdx.graphics.getWidth() / 2.0f + buttonSpacing / 2.0f;
     
-        float buttonY = Gdx.graphics.getHeight() / 2.0f - buttonHeight - 70;
+        float buttonY = Gdx.graphics.getHeight() / 2.0f - buttonHeight - 5;
     
         batch.draw(buttonATexture, buttonAX, buttonY, buttonWidth, buttonHeight);
         batch.draw(buttonBTexture, buttonBX, buttonY, buttonWidth, buttonHeight);
@@ -316,54 +318,64 @@ public class JogoVelha extends ApplicationAdapter {
         gameOver = false;
     }
 
+    private void criarPerguntas() {
+    
+        List<Alternativa> alternativas1 = Arrays.asList(
+                new Alternativa("A) Cretáceo", false),
+                new Alternativa("B) Triássico", true),
+                new Alternativa("C) Jurássico", false),
+                new Alternativa("D) Paleogene", false)
+        );
+        perguntas.add(new PerguntaDinossauro("De que período geológico são os fósseis da Quarta Colônia?", alternativas1));
+    
+        List<Alternativa> alternativas2 = Arrays.asList(
+                new Alternativa("A) Spinosaurus", false),
+                new Alternativa("B) Paralititan", false),
+                new Alternativa("C) Rincossauros", true),
+                new Alternativa("D) Ankylosaurus", false)
+        );
+        perguntas.add(new PerguntaDinossauro("Qual fóssil foi encontrado na Quarta Colônia?", alternativas2));
+    
+        List<Alternativa> alternativas3 = Arrays.asList(
+                new Alternativa("A) Africana", false),
+                new Alternativa("B) Portuguesa", false),
+                new Alternativa("C) Italiana", true),
+                new Alternativa("D) Indígena", false)
+        );
+        perguntas.add(new PerguntaDinossauro("Qual é a influência cultural predominante na arquitetura da Quarta Colônia?", alternativas3));
+    
+        List<Alternativa> alternativas4 = Arrays.asList(
+                new Alternativa("A) 9", true),
+                new Alternativa("B) 5", false),
+                new Alternativa("C) 11", false),
+                new Alternativa("D) 7", false)
+        );
+        perguntas.add(new PerguntaDinossauro("Quantos municípios compõem a Quarta Colônia?", alternativas4));
+    
+        List<Alternativa> alternativas5 = Arrays.asList(
+                new Alternativa("A) Restinga Seca", false),
+                new Alternativa("B) São João do Polêsine", false),
+                new Alternativa("C) Frederico Westphalen", true),
+                new Alternativa("D) Agudo", false)
+        );
+        perguntas.add(new PerguntaDinossauro("Qual destas cidades não pertence à Quarta Colônia?", alternativas5));
+    
+        List<Alternativa> alternativas6 = Arrays.asList(
+                new Alternativa("A) 1750", false),
+                new Alternativa("B) 1850", true),
+                new Alternativa("C) 1800", false),
+                new Alternativa("D) 1900", false)
+        );
+        perguntas.add(new PerguntaDinossauro("Quando foi fundada a Quarta Colônia?", alternativas6));
+    
+    }
+
     @Override
     public void dispose() {
         batch.dispose();
         xTexture.dispose();
         oTexture.dispose();
-    }
-
-    private void criarPerguntas() {
-        List<Alternativa> alternativas1 = Arrays.asList(
-                new Alternativa("A) Brontossauro", false),
-                new Alternativa("B) T-Rex", true),
-                new Alternativa("C) Triceratops", false),
-                new Alternativa("D) Diplodocus", false)
-        );
-        perguntas.add(new PerguntaDinossauro("Qual é o maior dinossauro?", alternativas1));
-    
-        List<Alternativa> alternativas2 = Arrays.asList(
-                new Alternativa("A) Cretáceo", false),
-                new Alternativa("B) Jurássico", true),
-                new Alternativa("C) Triássico", false),
-                new Alternativa("D) Paleogene", false)
-        );
-        perguntas.add(new PerguntaDinossauro("Em que período geológico viveu o Tyrannosaurus Rex?", alternativas2));
-    
-        List<Alternativa> alternativas3 = Arrays.asList(
-                new Alternativa("A) Velociraptor", false),
-                new Alternativa("B) Stegosaurus", false),
-                new Alternativa("C) Spinosaurus", true),
-                new Alternativa("D) Ankylosaurus", false)
-        );
-        perguntas.add(new PerguntaDinossauro("Qual dinossauro tinha espinhos nas costas?", alternativas3));
-        
-                List<Alternativa> alternativas4 = Arrays.asList(
-                new Alternativa("A) Diplodocus", false),
-                new Alternativa("B) Archaeopteryx", false),
-                new Alternativa("C) Dimorphodon", true),
-                new Alternativa("D) Quetzalcoatlus", false)
-        );
-        perguntas.add(new PerguntaDinossauro("Qual desses dinossauros é um pterossauro?", alternativas4));
-
-        List<Alternativa> alternativas5 = Arrays.asList(
-                new Alternativa("A) Dilofossauro", true),
-                new Alternativa("B) Allosaurus", false),
-                new Alternativa("C) Brachiosaurus", false),
-                new Alternativa("D) Compsognathus", false)
-        );
-        perguntas.add(new PerguntaDinossauro("Qual dinossauro foi apelidado de \"demônio de choque\" e apareceu no filme Jurassic Park?", alternativas5));
-
+        backgroundTexture.dispose();
     }
     
 }
