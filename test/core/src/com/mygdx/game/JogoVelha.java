@@ -33,6 +33,7 @@ public class JogoVelha extends ApplicationAdapter {
     private boolean perguntaEmAndamento;
     private Texture backgroundTexture;
     private Texture lineTexture;
+    private Texture questionTexture;
 
     private float buttonSpacing = 20;
 
@@ -55,7 +56,7 @@ public class JogoVelha extends ApplicationAdapter {
         buttonDTexture = new Texture("button_D2.png");
         perguntaEmAndamento = true;
         backgroundTexture = new Texture("background.png");
-        lineTexture = new Texture("osso.png"); 
+        questionTexture = new Texture("background2.png");
     }
 
     @Override
@@ -98,13 +99,13 @@ public class JogoVelha extends ApplicationAdapter {
     private void draw() {
         ScreenUtils.clear(1, 1, 1, 1);
         batch.begin();
-        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(questionTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         if (perguntaEmAndamento == true) {
+            batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             drawPergunta();
             drawRespostas();
         } else if (!gameOver && perguntaEmAndamento == false) {
-            drawBoard();
             drawPieces();
         } else {
             font.getData().setScale(2);
@@ -153,28 +154,6 @@ public class JogoVelha extends ApplicationAdapter {
         batch.end();
     }
 
-    private void drawBoard() {
-        float cellWidth = Gdx.graphics.getWidth() / 4.0f;
-        float cellHeight = Gdx.graphics.getHeight() / 4.0f;
-    
-        float offsetX = (Gdx.graphics.getWidth() - 3 * cellWidth) / 2.0f;
-        float offsetY = (Gdx.graphics.getHeight() - 3 * cellHeight) / 2.0f;
-    
-        batch.setColor(0, 0, 0, 1);  // Define a cor preta para desenhar as linhas
-    
-        // Desenha linhas verticais
-        for (int i = 1; i < 3; i++) {
-            batch.draw(xTexture, offsetX + i * cellWidth - 1.0f, offsetY, 2.0f, 3 * cellHeight);
-        }
-
-        // linhas horizontais
-        for (int i = 1; i < 3; i++) {
-            batch.draw(xTexture, offsetX, offsetY + i * cellHeight - 1.0f, 3 * cellWidth, 2.0f);
-        }
-        batch.setColor(1, 1, 1, 1);
-    }
-
-
     private void drawPieces() {
         float cellWidth = Gdx.graphics.getWidth() / 4.0f;
         float cellHeight = Gdx.graphics.getHeight() / 4.0f;
@@ -188,9 +167,9 @@ public class JogoVelha extends ApplicationAdapter {
                 float y = offsetY + (2 - i) * cellHeight;
 
                 if (board.getCell(i, j) == 'X') {
-                    batch.draw(xTexture, x + 5, y + 5, cellWidth - 40, cellHeight - 10);
+                    batch.draw(xTexture, x + 5, y + 5, cellWidth - 30, cellHeight - 10);
                 } else if (board.getCell(i, j) == 'O') {
-                    batch.draw(oTexture, x + 5, y + 5, cellWidth - 40, cellHeight - 10);
+                    batch.draw(oTexture, x + 5, y + 5, cellWidth - 30, cellHeight - 10);
                 }
             }
         }
@@ -376,6 +355,7 @@ public class JogoVelha extends ApplicationAdapter {
         xTexture.dispose();
         oTexture.dispose();
         backgroundTexture.dispose();
+        questionTexture.dispose();
     }
     
 }
